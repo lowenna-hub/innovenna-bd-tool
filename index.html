@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovenna — BD Messaging Tool</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#1A7A6A;--teal-50:#E0F4F0;--teal-dark:#085041;
+  --purple:#534AB7;--purple-50:#EEEDFE;
+  --coral:#993C1D;--coral-50:#FAECE7;
+  --charcoal:#2C2C2A;--mid:#5F5E5A;--hint:#888780;
+  --border:rgba(0,0,0,0.09);--border-med:rgba(0,0,0,0.14);
+  --bg:#F4F3EF;--white:#FFFFFF;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding:2rem 1rem;color:var(--charcoal);}
+.wrap{max-width:680px;margin:0 auto;}
+.hdr{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.hdr-top{display:flex;align-items:center;gap:12px;margin-bottom:5px;}
+.logo{width:36px;height:36px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:#fff;letter-spacing:.05em;flex-shrink:0;}
+.hdr h1{font-size:18px;font-weight:500;letter-spacing:-.02em;}
+.hdr p{font-size:13px;color:var(--mid);margin-left:48px;}
+.label{font-size:11px;font-weight:500;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:block;}
+.field{margin-bottom:18px;}
+textarea,select{width:100%;padding:11px 13px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--charcoal);background:var(--white);line-height:1.6;transition:border-color .15s;}
+textarea{resize:vertical;}
+textarea:focus,select:focus{outline:none;border-color:var(--teal);}
+.tier-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.pill{padding:7px 15px;border-radius:20px;border:1px solid var(--border-med);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;background:var(--white);color:var(--mid);transition:all .15s;}
+.pill:hover{border-color:var(--teal);color:var(--teal);}
+.pill.p-t0{background:var(--charcoal);color:#F1EFE8;border-color:var(--charcoal);}
+.pill.p-t1{background:var(--teal);color:#E1F5EE;border-color:var(--teal);}
+.pill.p-t2{background:var(--purple);color:#EEEDFE;border-color:var(--purple);}
+.pill.p-t3{background:var(--coral);color:#FAECE7;border-color:var(--coral);}
+.tier-hint{font-size:12px;color:var(--hint);font-style:italic;min-height:18px;line-height:1.5;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+@media(max-width:480px){.two-col{grid-template-columns:1fr;}}
+.btn-gen{width:100%;padding:13px 20px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;letter-spacing:-.01em;}
+.btn-gen:hover{opacity:.88;}
+.btn-gen:active{transform:scale(.99);}
+.btn-gen:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.divider{height:1px;background:var(--border);margin:22px 0;}
+.out-card{background:var(--white);border:1px solid var(--border-med);border-radius:12px;padding:1.25rem;margin-bottom:12px;}
+.out-label{font-size:11px;font-weight:500;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+.out-msg{font-size:14px;line-height:1.8;color:var(--charcoal);white-space:pre-wrap;font-family:'DM Mono',monospace;}
+.copy-btn{margin-top:14px;padding:7px 16px;font-size:12px;font-family:'DM Sans',sans-serif;border-radius:8px;border:1px solid var(--border-med);background:var(--bg);color:var(--mid);cursor:pointer;transition:all .15s;}
+.copy-btn:hover{background:var(--teal-50);color:var(--teal-dark);border-color:var(--teal);}
+.tweak-row{display:flex;gap:8px;flex-wrap:wrap;}
+.tweak-btn{padding:7px 14px;font-size:12px;font-family:'DM Sans',sans-serif;border-radius:8px;border:1px solid var(--border-med);background:var(--white);color:var(--mid);cursor:pointer;transition:all .15s;}
+.tweak-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-50);}
+.thinking{font-size:13px;color:var(--hint);font-style:italic;}
+#output-area{display:none;}
+.tier-guide{margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.tg-row{display:grid;grid-template-columns:110px 1fr 1fr;font-size:12px;border-bottom:1px solid var(--border);}
+.tg-row:last-child{border-bottom:none;}
+.tg-cell{padding:8px 12px;line-height:1.5;color:var(--mid);}
+.tg-cell:first-child{font-weight:500;color:var(--charcoal);}
+.tg-hdr .tg-cell{background:#EFEDE8;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--hint);}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;}
+.b-t0{background:var(--charcoal);color:#F1EFE8;}
+.b-t1{background:var(--teal-50);color:var(--teal-dark);}
+.b-t2{background:var(--purple-50);color:var(--purple);}
+.b-t3{background:var(--coral-50);color:var(--coral);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="logo">BD</div>
+      <h1>Innovenna — BD messaging tool</h1>
+    </div>
+    <p>paste a profile, add your angle, generate a message in Lowenna's voice</p>
+  </div>
+
+  <div class="tier-guide">
+    <div class="tg-row tg-hdr"><div class="tg-cell">tier</div><div class="tg-cell">who they are</div><div class="tg-cell">your goal</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t0">T0</span> existing</div><div class="tg-cell">already connected, know you already</div><div class="tg-cell">warm up, re-open, graduate to right tier</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t1">T1</span> buyer</div><div class="tg-cell">founder / CEO who could hire Lowenna</div><div class="tg-cell">start a real conversation → discovery call</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t2">T2</span> partner</div><div class="tg-cell">adjacent service provider (coach, CFO, recruiter...)</div><div class="tg-cell">peer conversation → referral swap</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t3">T3</span> amplifier</div><div class="tg-cell">podcast, newsletter, event organiser, investor</div><div class="tg-cell">visibility play → stage / feature / intro</div></div>
+  </div>
+
+  <div class="field">
+    <span class="label">Tier</span>
+    <div class="tier-pills">
+      <button class="pill" id="pill-t0" onclick="setTier('T0')">T0 — existing network</button>
+      <button class="pill" id="pill-t1" onclick="setTier('T1')">T1 — buyer</button>
+      <button class="pill" id="pill-t2" onclick="setTier('T2')">T2 — referral partner</button>
+      <button class="pill" id="pill-t3" onclick="setTier('T3')">T3 — amplifier</button>
+    </div>
+    <div class="tier-hint" id="tier-hint">select a tier to see guidance</div>
+  </div>
+
+  <div class="field">
+    <span class="label">Paste their LinkedIn profile</span>
+    <textarea id="profile" rows="8" placeholder="paste everything — name, headline, about section, recent posts, experience. the more context the better the message."></textarea>
+  </div>
+
+  <div class="field">
+    <span class="label">Your thoughts / angle</span>
+    <textarea id="thoughts" rows="3" placeholder="e.g. 'love what they do with events, want to ask about their weirdest project' or 'think they could refer us to saas founders' — anything in your head, however rough"></textarea>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <span class="label">Message type</span>
+      <select id="msg-type">
+        <option value="first_message">first message (already connected)</option>
+        <option value="connection_note">connection request note</option>
+        <option value="follow_up">follow-up (no reply yet)</option>
+        <option value="reply">reply to their message</option>
+        <option value="re_engage">re-engage (gone cold)</option>
+        <option value="warm_reconnect">warm reconnect (T0 — existing)</option>
+      </select>
+    </div>
+    <div>
+      <span class="label">Tone</span>
+      <select id="tone">
+        <option value="warm_curious">warm + curious</option>
+        <option value="direct_confident">direct + confident</option>
+        <option value="peer_to_peer">peer-to-peer</option>
+        <option value="playful">playful + light</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn-gen" id="gen-btn" onclick="generate()">generate message →</button>
+
+  <div id="output-area">
+    <div class="divider"></div>
+    <div class="out-card">
+      <div class="out-label">message for Lowenna</div>
+      <div class="out-msg" id="out-msg"></div>
+      <button class="copy-btn" id="copy-btn" onclick="copyMsg()">copy message</button>
+    </div>
+    <div class="tweak-row">
+      <button class="tweak-btn" onclick="tweak('make it shorter and punchier, max 3 sentences')">shorter →</button>
+      <button class="tweak-btn" onclick="tweak('make it warmer and more personal')">warmer →</button>
+      <button class="tweak-btn" onclick="tweak('try a completely different angle or hook')">different angle →</button>
+      <button class="tweak-btn" onclick="tweak('make it more direct, cut any fluff')">more direct →</button>
+    </div>
+  </div>
+
+</div>
+<script>
+const TIER_HINTS = {
+  T0:'existing connection — they already know you, be warmer and more direct, re-opening something that already exists',
+  T1:'direct buyer — spark a real conversation, one genuine question about their world, never pitch on first message',
+  T2:'referral partner — pure peer-to-peer, "our worlds overlap" energy, no mention of services, plant the seed naturally',
+  T3:'amplifier — low ask, genuine interest in their platform, visibility play not a sales conversation'
+};
+const TIER_CLASSES = {T0:'p-t0',T1:'p-t1',T2:'p-t2',T3:'p-t3'};
+let selectedTier = '';
+let lastMsg = '';
+
+function setTier(t) {
+  selectedTier = t;
+  ['T0','T1','T2','T3'].forEach(x => {
+    document.getElementById('pill-'+x.toLowerCase()).className = 'pill';
+  });
+  document.getElementById('pill-'+t.toLowerCase()).classList.add(TIER_CLASSES[t]);
+  document.getElementById('tier-hint').textContent = TIER_HINTS[t];
+  if (t==='T0') { document.getElementById('msg-type').value='warm_reconnect'; }
+  if (t==='T1') { document.getElementById('msg-type').value='first_message'; }
+  if (t==='T2') { document.getElementById('msg-type').value='first_message'; document.getElementById('tone').value='peer_to_peer'; }
+  if (t==='T3') { document.getElementById('msg-type').value='first_message'; document.getElementById('tone').value='warm_curious'; }
+}
+
+const SYSTEM = `You are a LinkedIn messaging specialist writing on behalf of Lowenna, founder of Innovenna. Innovenna helps B2B founders close their Exposure Gap — the distance between how good they actually are and how visible they are on LinkedIn. Lowenna uses the GASPE framework to build LinkedIn authority systems that generate inbound leads.
+
+LOWENNA'S VOICE — follow these rules exactly:
+- all lowercase throughout (no capitals except proper nouns like names and company names)
+- conversational, warm, genuinely curious
+- no ellipsis (...) ever
+- no more than one exclamation mark per message, ideally none
+- no corporate language whatsoever
+- never pitch on a first message — ever
+- short sentences, natural rhythm, feels like a real human typed it
+- max 3-4 sentences for first messages and connection notes
+- no formal sign-off — just end naturally
+- no emojis
+
+TIER RULES:
+T0 (existing network): they already know Lowenna. warm re-open. reference something real. can be more direct. goal is to restart a real conversation.
+T1 (buyers — founders/CEOs): one genuine question about THEIR world. no mention of Innovenna unless they ask.
+T2 (referral partners — fractional CFOs, coaches, recruiters, brand strategists, PR etc): purely peer-to-peer. never mention Innovenna services. referral relationship emerges naturally, never stated.
+T3 (amplifiers — podcast hosts, newsletter writers, event organisers, investors, community leaders): low ask, genuine interest in their platform. never make the ask explicit in a first message.
+
+OUTPUT: return ONLY the message text. no preamble, no explanation. just the raw message ready to copy and paste.`;
+
+async function callAPI(messages) {
+  const res = await fetch('/.netlify/functions/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system: SYSTEM, messages })
+  });
+  const data = await res.json();
+  if (data.error) { alert('error: ' + (data.error.message || JSON.stringify(data.error))); return null; }
+  return data.content?.filter(b => b.type === 'text').map(b => b.text).join('') || null;
+}
+
+async function generate() {
+  const profile = document.getElementById('profile').value.trim();
+  const thoughts = document.getElementById('thoughts').value.trim();
+  const msgType = document.getElementById('msg-type').value;
+  const tone = document.getElementById('tone').value;
+  if (!profile) { alert('paste a profile first'); return; }
+  if (!selectedTier) { alert('pick a tier'); return; }
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.textContent = 'generating...';
+  document.getElementById('output-area').style.display = 'block';
+  document.getElementById('out-msg').innerHTML = '<span class="thinking">writing...</span>';
+  const userMsg = `tier: ${selectedTier}
+message type: ${msgType.replace(/_/g,' ')}
+tone: ${tone.replace(/_/g,' ')}
+
+profile:
+${profile}
+
+lowenna's thoughts / angle:
+${thoughts || 'use your judgement — find the most genuine hook'}
+
+write the message now.`;
+  const reply = await callAPI([{ role: 'user', content: userMsg }]);
+  if (reply) { document.getElementById('out-msg').textContent = reply; lastMsg = reply; }
+  else { document.getElementById('out-msg').textContent = 'something went wrong — try again'; }
+  btn.disabled = false; btn.textContent = 'generate message →';
+}
+
+async function tweak(instruction) {
+  if (!lastMsg) return;
+  const profile = document.getElementById('profile').value.trim();
+  document.getElementById('out-msg').innerHTML = '<span class="thinking">rewriting...</span>';
+  const userMsg = `current message:\n"${lastMsg}"\n\ninstruction: ${instruction}\n\nprofile context:\n${profile.slice(0,500)}\n\ntier: ${selectedTier}\n\nrewrite following the instruction. output only the new message.`;
+  const reply = await callAPI([{ role: 'user', content: userMsg }]);
+  if (reply) { document.getElementById('out-msg').textContent = reply; lastMsg = reply; }
+}
+
+function copyMsg() {
+  const msg = document.getElementById('out-msg').textContent;
+  navigator.clipboard.writeText(msg).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'copied';
+    setTimeout(() => btn.textContent = 'copy message', 2000);
+  });
+}
+</script>
+</body>
+</html>
