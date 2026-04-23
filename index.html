@@ -160,9 +160,10 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
   </div>
 
   <div id="convo-area">
+    <div style="height:1px;background:rgba(0,0,0,0.09);margin:0 0 1.5rem;"></div>
     <div class="convo-section">
-      <div class="convo-title">conversation thread</div>
-      <div class="convo-sub">paste their reply below and keep the conversation going in Lowenna's voice</div>
+      <div class="convo-title">conversation manager</div>
+      <div class="convo-sub">already in a conversation? paste what they said and generate Lowenna's next reply. or continue from a generated first message above.</div>
       <div class="thread" id="thread"></div>
       <div id="next-action-box" style="display:none;" class="next-action">
         <strong>suggested next action</strong>
@@ -344,7 +345,6 @@ function copyMsg() {
 }
 
 function showConvoArea(firstMsg) {
-  document.getElementById('convo-area').style.display = 'block';
   document.getElementById('thread').innerHTML = '';
   addBubble('lowenna', firstMsg);
 }
