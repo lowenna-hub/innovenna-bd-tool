@@ -37,7 +37,7 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
 .tier-hint{font-size:12px;color:var(--hint);font-style:italic;min-height:18px;line-height:1.5;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
 @media(max-width:480px){.two-col{grid-template-columns:1fr;}}
-.btn-gen{width:100%;padding:13px 20px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;letter-spacing:-.01em;}
+.btn-gen{width:100%;padding:13px 20px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .15s,transform .1s;}
 .btn-gen:hover{opacity:.88;}
 .btn-gen:active{transform:scale(.99);}
 .btn-gen:disabled{opacity:.4;cursor:not-allowed;transform:none;}
@@ -52,6 +52,7 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
 .tweak-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-50);}
 .thinking{font-size:13px;color:var(--hint);font-style:italic;}
 #output-area{display:none;}
+#convo-area{display:none;margin-top:2rem;}
 .tier-guide{margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
 .tg-row{display:grid;grid-template-columns:110px 1fr 1fr;font-size:12px;border-bottom:1px solid var(--border);}
 .tg-row:last-child{border-bottom:none;}
@@ -63,6 +64,19 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
 .b-t1{background:var(--teal-50);color:var(--teal-dark);}
 .b-t2{background:var(--purple-50);color:var(--purple);}
 .b-t3{background:var(--coral-50);color:var(--coral);}
+.convo-section{border-top:1px solid var(--border);padding-top:1.5rem;}
+.convo-title{font-size:13px;font-weight:500;color:var(--charcoal);margin-bottom:4px;}
+.convo-sub{font-size:12px;color:var(--hint);margin-bottom:16px;}
+.thread{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.bubble{padding:10px 14px;border-radius:10px;font-size:14px;line-height:1.6;font-family:'DM Mono',monospace;max-width:88%;}
+.bubble.lowenna{background:var(--teal);color:#E0F4F0;border-bottom-right-radius:3px;}
+.bubble.them{background:var(--white);border:1px solid var(--border-med);color:var(--charcoal);border-bottom-left-radius:3px;}
+.bubble-wrap{display:flex;flex-direction:column;}
+.bubble-wrap.lowenna{align-items:flex-end;}
+.bubble-wrap.them{align-items:flex-start;}
+.blabel{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;color:var(--hint);}
+.next-action{background:var(--teal-50);border:1px solid rgba(26,122,106,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--teal-dark);margin-bottom:14px;}
+.next-action strong{display:block;margin-bottom:2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
 </style>
 </head>
 <body>
@@ -79,9 +93,9 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
   <div class="tier-guide">
     <div class="tg-row tg-hdr"><div class="tg-cell">tier</div><div class="tg-cell">who they are</div><div class="tg-cell">your goal</div></div>
     <div class="tg-row"><div class="tg-cell"><span class="badge b-t0">T0</span> existing</div><div class="tg-cell">already connected, know you already</div><div class="tg-cell">warm up, re-open, graduate to right tier</div></div>
-    <div class="tg-row"><div class="tg-cell"><span class="badge b-t1">T1</span> buyer</div><div class="tg-cell">founder / CEO who could hire Lowenna</div><div class="tg-cell">start a real conversation → discovery call</div></div>
-    <div class="tg-row"><div class="tg-cell"><span class="badge b-t2">T2</span> partner</div><div class="tg-cell">adjacent service provider (coach, CFO, recruiter...)</div><div class="tg-cell">peer conversation → referral swap</div></div>
-    <div class="tg-row"><div class="tg-cell"><span class="badge b-t3">T3</span> amplifier</div><div class="tg-cell">podcast, newsletter, event organiser, investor</div><div class="tg-cell">visibility play → stage / feature / intro</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t1">T1</span> buyer</div><div class="tg-cell">founder / CEO who could hire Lowenna</div><div class="tg-cell">start a real conversation, discovery call</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t2">T2</span> partner</div><div class="tg-cell">adjacent service provider (coach, CFO, recruiter...)</div><div class="tg-cell">peer conversation, referral swap</div></div>
+    <div class="tg-row"><div class="tg-cell"><span class="badge b-t3">T3</span> amplifier</div><div class="tg-cell">podcast, newsletter, event organiser, investor</div><div class="tg-cell">visibility play, stage / feature / intro</div></div>
   </div>
 
   <div class="field">
@@ -97,12 +111,12 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
 
   <div class="field">
     <span class="label">Paste their LinkedIn profile</span>
-    <textarea id="profile" rows="8" placeholder="paste everything — name, headline, about section, recent posts, experience. the more context the better the message."></textarea>
+    <textarea id="profile" rows="8" placeholder="paste everything... name, headline, about section, recent posts, experience. the more context the better the message."></textarea>
   </div>
 
   <div class="field">
     <span class="label">Your thoughts / angle</span>
-    <textarea id="thoughts" rows="3" placeholder="e.g. 'love what they do with events, want to ask about their weirdest project' or 'think they could refer us to saas founders' — anything in your head, however rough"></textarea>
+    <textarea id="thoughts" rows="3" placeholder="anything in your head however rough... e.g. love what they do with events, want to ask about their weirdest project"></textarea>
   </div>
 
   <div class="two-col">
@@ -114,21 +128,21 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
         <option value="follow_up">follow-up (no reply yet)</option>
         <option value="reply">reply to their message</option>
         <option value="re_engage">re-engage (gone cold)</option>
-        <option value="warm_reconnect">warm reconnect (T0 — existing)</option>
+        <option value="warm_reconnect">warm reconnect (T0 existing)</option>
       </select>
     </div>
     <div>
       <span class="label">Tone</span>
       <select id="tone">
-        <option value="warm_curious">warm + curious</option>
-        <option value="direct_confident">direct + confident</option>
-        <option value="peer_to_peer">peer-to-peer</option>
-        <option value="playful">playful + light</option>
+        <option value="warm_curious">warm and curious</option>
+        <option value="direct_confident">direct and confident</option>
+        <option value="peer_to_peer">peer to peer</option>
+        <option value="playful">playful and light</option>
       </select>
     </div>
   </div>
 
-  <button class="btn-gen" id="gen-btn" onclick="generate()">generate message →</button>
+  <button class="btn-gen" id="gen-btn" onclick="generate()">generate message</button>
 
   <div id="output-area">
     <div class="divider"></div>
@@ -138,127 +152,273 @@ textarea:focus,select:focus{outline:none;border-color:var(--teal);}
       <button class="copy-btn" id="copy-btn" onclick="copyMsg()">copy message</button>
     </div>
     <div class="tweak-row">
-      <button class="tweak-btn" onclick="tweak('make it shorter and punchier, max 3 sentences')">shorter →</button>
-      <button class="tweak-btn" onclick="tweak('make it warmer and more personal')">warmer →</button>
-      <button class="tweak-btn" onclick="tweak('try a completely different angle or hook')">different angle →</button>
-      <button class="tweak-btn" onclick="tweak('make it more direct, cut any fluff')">more direct →</button>
+      <button class="tweak-btn" onclick="tweak('make it shorter and punchier, max 3 sentences')">shorter</button>
+      <button class="tweak-btn" onclick="tweak('make it warmer and more personal')">warmer</button>
+      <button class="tweak-btn" onclick="tweak('try a completely different angle or hook')">different angle</button>
+      <button class="tweak-btn" onclick="tweak('make it more direct, cut any fluff')">more direct</button>
+    </div>
+  </div>
+
+  <div id="convo-area">
+    <div class="convo-section">
+      <div class="convo-title">conversation thread</div>
+      <div class="convo-sub">paste their reply below and keep the conversation going in Lowenna's voice</div>
+      <div class="thread" id="thread"></div>
+      <div id="next-action-box" style="display:none;" class="next-action">
+        <strong>suggested next action</strong>
+        <span id="next-action-text"></span>
+      </div>
+      <div class="field">
+        <span class="label">their reply</span>
+        <textarea id="their-reply" rows="4" placeholder="paste what they said..."></textarea>
+      </div>
+      <div class="field">
+        <span class="label">your notes (optional)</span>
+        <textarea id="reply-notes" rows="2" placeholder="e.g. they seem warm, push for a call... or keep it light for now"></textarea>
+      </div>
+      <button class="btn-gen" id="reply-btn" onclick="continueConvo()">generate reply</button>
+      <div id="reply-out-area" style="display:none;margin-top:14px;">
+        <div class="out-card">
+          <div class="out-label">Lowenna's reply</div>
+          <div class="out-msg" id="reply-out-msg"></div>
+          <button class="copy-btn" id="reply-copy-btn" onclick="copyReply()">copy reply</button>
+        </div>
+        <div class="tweak-row">
+          <button class="tweak-btn" onclick="tweakReply('make it shorter and punchier')">shorter</button>
+          <button class="tweak-btn" onclick="tweakReply('make it warmer')">warmer</button>
+          <button class="tweak-btn" onclick="tweakReply('nudge towards booking a call')">nudge to call</button>
+          <button class="tweak-btn" onclick="tweakReply('back off and keep it light')">back off</button>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 <script>
-const TIER_HINTS = {
-  T0:'existing connection — they already know you, be warmer and more direct, re-opening something that already exists',
-  T1:'direct buyer — spark a real conversation, one genuine question about their world, never pitch on first message',
-  T2:'referral partner — pure peer-to-peer, "our worlds overlap" energy, no mention of services, plant the seed naturally',
-  T3:'amplifier — low ask, genuine interest in their platform, visibility play not a sales conversation'
+var TIER_HINTS = {
+  T0: 'existing connection... they already know you, be warmer and more direct, re-opening something that already exists',
+  T1: 'direct buyer... spark a real conversation, one genuine question about their world, never pitch on first message',
+  T2: 'referral partner... pure peer-to-peer, our worlds overlap energy, no mention of services, plant the seed naturally',
+  T3: 'amplifier... low ask, genuine interest in their platform, visibility play not a sales conversation'
 };
-const TIER_CLASSES = {T0:'p-t0',T1:'p-t1',T2:'p-t2',T3:'p-t3'};
-let selectedTier = '';
-let lastMsg = '';
+var TIER_CLASSES = {T0:'p-t0',T1:'p-t1',T2:'p-t2',T3:'p-t3'};
+var selectedTier = '';
+var lastMsg = '';
+var lastReply = '';
+var convoHistory = [];
+var profileContext = '';
+
+var SYSTEM = [
+  'You are writing LinkedIn direct messages on behalf of Lowenna, founder of Innovenna.',
+  'Innovenna helps B2B founders and consultants close their Exposure Gap... the distance between how good they actually are and how visible they are on LinkedIn.',
+  'Lowenna uses the GASPE framework to build LinkedIn authority systems that generate inbound leads.',
+  '',
+  'WHO LOWENNA IS:',
+  'genuinely curious and excited about people... she actually wants to know the answer to every question she asks.',
+  'warm, funny, witty, a little bit scatty and chaotic in the best way.',
+  'like a smart friend who gets distracted by something interesting mid-sentence.',
+  'slightly irreverent, never corporate. british. commercially sharp but wears it lightly.',
+  'she finds people genuinely fascinating. when someone does something cool she wants to know everything about it. that curiosity is real, not performed.',
+  '',
+  'VOICE RULES:',
+  '- british english only',
+  '- all lowercase except person names and company names',
+  '- use ellipsis (...) freely... it is natural to how she writes, reflects her scatty train of thought',
+  '- no dashes of any kind. no hyphens between words, no en dashes, no em dashes. none. ever.',
+  '- no semicolons, no asterisks, no colons, no hashtags, no emojis',
+  '- short punchy sentences mixed with longer ones that trail off into something else...',
+  '- one sentence paragraphs are fine and encouraged',
+  '- sporadic, spontaneous, a bit chaotic... like she typed it fast, got distracted, came back, hit send',
+  '- active voice. address them directly with you and your',
+  '- genuinely curious tone... she actually wants to know the answer',
+  '- humour comes naturally, not forced... a light observation, a self aware aside, a bit of wit',
+  '- never pitch on a first message ever',
+  '- no formal sign off, just end naturally mid thought if needed',
+  '- no AI filler phrases whatsoever',
+  '- concrete and specific... if something is interesting say exactly why',
+  '- warm but never gushing',
+  '- max 3 to 4 sentences for first messages... for replies in a conversation can be slightly longer if the energy is there',
+  '',
+  'PERSONALITY:',
+  '- gets genuinely excited when someone does something unexpected or creative',
+  '- asks questions she actually wants answered, not questions to seem interested',
+  '- notices the specific thing, not the general vibe',
+  '- self aware and occasionally pokes fun at herself',
+  '- keeps it real... if something is a bit weird or niche she will say so and love it anyway',
+  '- does not take herself too seriously but takes her work seriously',
+  '',
+  'LANGUAGE TO USE NATURALLY WHEN IT FITS:',
+  'show up / noise / your corner of the internet / turn content into conversations / likes are cute revenue is cuter / main character energy',
+  '',
+  'NEVER USE:',
+  'jargon / over-explaining / long blocks of text / americanisms / generic motivational language / corporate warmth / performed enthusiasm',
+  '',
+  'TIER RULES:',
+  'T0: they already know Lowenna. warm re-open. reference something real and specific. can be more direct and playful. restart a genuine conversation.',
+  'T1: one genuine question about their world that she actually wants answered. no mention of Innovenna unless they ask. find the most interesting or unexpected thing about them.',
+  'T2: purely peer-to-peer. never mention Innovenna services. find the overlap and be curious about their world. let the referral relationship emerge naturally.',
+  'T3: low ask, genuine interest in what they are building. never make the ask explicit in a first message. find something specific about their platform that genuinely interests her.',
+  '',
+  'OUTPUT: return ONLY the message text. no preamble, no explanation. just the raw message ready to copy and paste.'
+].join('\n');
 
 function setTier(t) {
   selectedTier = t;
-  ['T0','T1','T2','T3'].forEach(x => {
-    document.getElementById('pill-'+x.toLowerCase()).className = 'pill';
+  ['T0','T1','T2','T3'].forEach(function(x) {
+    document.getElementById('pill-' + x.toLowerCase()).className = 'pill';
   });
-  document.getElementById('pill-'+t.toLowerCase()).classList.add(TIER_CLASSES[t]);
+  document.getElementById('pill-' + t.toLowerCase()).classList.add(TIER_CLASSES[t]);
   document.getElementById('tier-hint').textContent = TIER_HINTS[t];
-  if (t==='T0') { document.getElementById('msg-type').value='warm_reconnect'; }
-  if (t==='T1') { document.getElementById('msg-type').value='first_message'; }
-  if (t==='T2') { document.getElementById('msg-type').value='first_message'; document.getElementById('tone').value='peer_to_peer'; }
-  if (t==='T3') { document.getElementById('msg-type').value='first_message'; document.getElementById('tone').value='warm_curious'; }
+  if (t === 'T0') { document.getElementById('msg-type').value = 'warm_reconnect'; }
+  if (t === 'T1') { document.getElementById('msg-type').value = 'first_message'; }
+  if (t === 'T2') { document.getElementById('msg-type').value = 'first_message'; document.getElementById('tone').value = 'peer_to_peer'; }
+  if (t === 'T3') { document.getElementById('msg-type').value = 'first_message'; document.getElementById('tone').value = 'warm_curious'; }
 }
 
-const SYSTEM = `You are writing LinkedIn direct messages on behalf of Lowenna, founder of Innovenna. Innovenna helps B2B founders and consultants close their Exposure Gap... the distance between how good they actually are and how visible they are on LinkedIn. Lowenna uses the GASPE framework to build LinkedIn authority systems that generate inbound leads.
-
-WHO LOWENNA IS:
-direct, witty, slightly irreverent, warm but not soft. like a smart friend who hypes you up but also calls you out. no corporate fluff. no generic linkedin guru energy. commercially aware, not performative. british.
-
-VOICE RULES:
-- british english only
-- all lowercase except person names and company names
-- use ellipsis (...) freely... it is natural to how she writes
-- no dashes of any kind. no hyphens between words, no en dashes, no em dashes. none. ever.
-- no semicolons, no asterisks, no colons, no hashtags, no emojis
-- short punchy sentences. frequent line breaks. one sentence paragraphs are fine.
-- sporadic, spontaneous... like she typed it fast and hit send
-- active voice always. address them directly with you and your
-- never pitch on a first message ever
-- no formal sign off, just end naturally
-- no AI filler phrases like i hope this finds you well or i wanted to reach out or lets explore or game changer or streamline or boosting or its important to note
-- concrete and specific, not vague... if something is interesting say exactly why
-- keep it real. warm but not gushing.
-- max 3 to 4 sentences for first messages
-
-LANGUAGE TO USE NATURALLY WHEN IT FITS:
-show up / noise / your corner of the internet / turn content into conversations / likes are cute revenue is cuter / main character energy
-
-NEVER USE:
-jargon / over-explaining / long blocks of text / americanisms / generic motivational language
-
-TIER RULES:
-T0 (existing network): they already know Lowenna. warm re-open. reference something real. can be more direct. restart a real conversation.
-T1 (buyers): one genuine question about their world. no mention of Innovenna unless they ask.
-T2 (referral partners... fractional CFOs, coaches, recruiters, brand strategists, PR etc): purely peer-to-peer. never mention Innovenna services. let the referral relationship emerge naturally.
-T3 (amplifiers... podcast hosts, newsletter writers, event organisers, investors, community leaders): low ask, genuine interest in their platform. never make the ask explicit in a first message.
-
-OUTPUT: return ONLY the message text. no preamble, no explanation. just the raw message ready to copy and paste.`
-
 async function callAPI(messages) {
-  const res = await fetch('/.netlify/functions/generate', {
+  var res = await fetch('/.netlify/functions/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system: SYSTEM, messages })
+    body: JSON.stringify({ system: SYSTEM, messages: messages })
   });
-  const data = await res.json();
-  if (data.error) { alert('error: ' + (data.error.message || JSON.stringify(data.error))); return null; }
-  return data.content?.filter(b => b.type === 'text').map(b => b.text).join('') || null;
+  var data = await res.json();
+  if (data.error) {
+    alert('error: ' + (data.error.message || JSON.stringify(data.error)));
+    return null;
+  }
+  if (!data.content) return null;
+  return data.content.filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
 }
 
 async function generate() {
-  const profile = document.getElementById('profile').value.trim();
-  const thoughts = document.getElementById('thoughts').value.trim();
-  const msgType = document.getElementById('msg-type').value;
-  const tone = document.getElementById('tone').value;
+  var profile = document.getElementById('profile').value.trim();
+  var thoughts = document.getElementById('thoughts').value.trim();
+  var msgType = document.getElementById('msg-type').value;
+  var tone = document.getElementById('tone').value;
   if (!profile) { alert('paste a profile first'); return; }
   if (!selectedTier) { alert('pick a tier'); return; }
-  const btn = document.getElementById('gen-btn');
-  btn.disabled = true; btn.textContent = 'generating...';
+  var btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.textContent = 'generating...';
   document.getElementById('output-area').style.display = 'block';
   document.getElementById('out-msg').innerHTML = '<span class="thinking">writing...</span>';
-  const userMsg = `tier: ${selectedTier}
-message type: ${msgType.replace(/_/g,' ')}
-tone: ${tone.replace(/_/g,' ')}
-
-profile:
-${profile}
-
-lowenna's thoughts / angle:
-${thoughts || 'use your judgement — find the most genuine hook'}
-
-write the message now.`;
-  const reply = await callAPI([{ role: 'user', content: userMsg }]);
-  if (reply) { document.getElementById('out-msg').textContent = reply; lastMsg = reply; }
-  else { document.getElementById('out-msg').textContent = 'something went wrong — try again'; }
-  btn.disabled = false; btn.textContent = 'generate message →';
+  var userMsg = 'tier: ' + selectedTier + '\n'
+    + 'message type: ' + msgType.replace(/_/g, ' ') + '\n'
+    + 'tone: ' + tone.replace(/_/g, ' ') + '\n\n'
+    + 'profile:\n' + profile + '\n\n'
+    + 'lowenna thoughts / angle:\n' + (thoughts || 'find the most genuinely interesting thing about this person and lead with that') + '\n\n'
+    + 'write the message now.';
+  var reply = await callAPI([{ role: 'user', content: userMsg }]);
+  if (reply) {
+    document.getElementById('out-msg').textContent = reply;
+    lastMsg = reply;
+    profileContext = profile;
+    convoHistory = [{ role: 'assistant', content: reply }];
+    showConvoArea(reply);
+  } else {
+    document.getElementById('out-msg').textContent = 'something went wrong... try again';
+  }
+  btn.disabled = false;
+  btn.textContent = 'generate message';
 }
 
 async function tweak(instruction) {
   if (!lastMsg) return;
-  const profile = document.getElementById('profile').value.trim();
+  var profile = document.getElementById('profile').value.trim();
   document.getElementById('out-msg').innerHTML = '<span class="thinking">rewriting...</span>';
-  const userMsg = `current message:\n"${lastMsg}"\n\ninstruction: ${instruction}\n\nprofile context:\n${profile.slice(0,500)}\n\ntier: ${selectedTier}\n\nrewrite following the instruction. output only the new message.`;
-  const reply = await callAPI([{ role: 'user', content: userMsg }]);
+  var userMsg = 'current message:\n"' + lastMsg + '"\n\n'
+    + 'instruction: ' + instruction + '\n\n'
+    + 'profile context:\n' + profile.slice(0, 500) + '\n\n'
+    + 'tier: ' + selectedTier + '\n\n'
+    + 'rewrite following the instruction. output only the new message.';
+  var reply = await callAPI([{ role: 'user', content: userMsg }]);
   if (reply) { document.getElementById('out-msg').textContent = reply; lastMsg = reply; }
 }
 
 function copyMsg() {
-  const msg = document.getElementById('out-msg').textContent;
-  navigator.clipboard.writeText(msg).then(() => {
-    const btn = document.getElementById('copy-btn');
+  navigator.clipboard.writeText(lastMsg).then(function() {
+    var btn = document.getElementById('copy-btn');
     btn.textContent = 'copied';
-    setTimeout(() => btn.textContent = 'copy message', 2000);
+    setTimeout(function() { btn.textContent = 'copy message'; }, 2000);
+  });
+}
+
+function showConvoArea(firstMsg) {
+  document.getElementById('convo-area').style.display = 'block';
+  document.getElementById('thread').innerHTML = '';
+  addBubble('lowenna', firstMsg);
+}
+
+function addBubble(who, text) {
+  var thread = document.getElementById('thread');
+  var wrap = document.createElement('div');
+  wrap.className = 'bubble-wrap ' + who;
+  var label = document.createElement('div');
+  label.className = 'blabel';
+  label.textContent = who === 'lowenna' ? 'lowenna' : 'them';
+  var bubble = document.createElement('div');
+  bubble.className = 'bubble ' + who;
+  bubble.textContent = text;
+  wrap.appendChild(label);
+  wrap.appendChild(bubble);
+  thread.appendChild(wrap);
+}
+
+async function continueConvo() {
+  var theirReply = document.getElementById('their-reply').value.trim();
+  var notes = document.getElementById('reply-notes').value.trim();
+  if (!theirReply) { alert('paste their reply first'); return; }
+  addBubble('them', theirReply);
+  convoHistory.push({ role: 'user', content: theirReply });
+  document.getElementById('their-reply').value = '';
+  var btn = document.getElementById('reply-btn');
+  btn.disabled = true;
+  btn.textContent = 'writing...';
+  document.getElementById('reply-out-area').style.display = 'block';
+  document.getElementById('reply-out-msg').innerHTML = '<span class="thinking">thinking...</span>';
+  var contextMsg = 'you are continuing a linkedin conversation on behalf of Lowenna. tier: ' + selectedTier + '.\n\n'
+    + 'profile context:\n' + profileContext.slice(0, 600) + '\n\n'
+    + 'the conversation history is in the messages. write Lowenna\'s next reply.\n\n'
+    + (notes ? 'notes from Lowenna: ' + notes + '\n\n' : '')
+    + 'also suggest a one-line next action at the very end on a new line starting with ACTION: (e.g. ACTION: they seem warm, suggest a call next message)';
+  var messages = [{ role: 'user', content: contextMsg }]
+    .concat(convoHistory.slice(0, -1))
+    .concat([{ role: 'user', content: theirReply + (notes ? '\n\nnotes: ' + notes : '') }]);
+  var reply = await callAPI(messages);
+  if (reply) {
+    var actionMatch = reply.match(/ACTION:(.*)/i);
+    var cleanReply = reply.replace(/ACTION:.*/i, '').trim();
+    document.getElementById('reply-out-msg').textContent = cleanReply;
+    lastReply = cleanReply;
+    if (actionMatch) {
+      document.getElementById('next-action-box').style.display = 'block';
+      document.getElementById('next-action-text').textContent = actionMatch[1].trim();
+    }
+    convoHistory.push({ role: 'assistant', content: cleanReply });
+    addBubble('lowenna', cleanReply);
+  } else {
+    document.getElementById('reply-out-msg').textContent = 'something went wrong... try again';
+  }
+  btn.disabled = false;
+  btn.textContent = 'generate reply';
+}
+
+async function tweakReply(instruction) {
+  if (!lastReply) return;
+  document.getElementById('reply-out-msg').innerHTML = '<span class="thinking">rewriting...</span>';
+  var userMsg = 'current reply:\n"' + lastReply + '"\n\n'
+    + 'instruction: ' + instruction + '\n\n'
+    + 'tier: ' + selectedTier + '\n\n'
+    + 'rewrite following the instruction. output only the new message.';
+  var reply = await callAPI([{ role: 'user', content: userMsg }]);
+  if (reply) { document.getElementById('reply-out-msg').textContent = reply; lastReply = reply; }
+}
+
+function copyReply() {
+  navigator.clipboard.writeText(lastReply).then(function() {
+    var btn = document.getElementById('reply-copy-btn');
+    btn.textContent = 'copied';
+    setTimeout(function() { btn.textContent = 'copy reply'; }, 2000);
   });
 }
 </script>
